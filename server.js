@@ -8,7 +8,11 @@ const multer = require('multer');
 const fs = require('fs');
 
 const app = express();
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
+
+// Use /tmp for Vercel, or local for development
+const dbPath = process.env.VERCEL ? '/tmp/app.db' : './app.db';
+const sessionDbPath = process.env.VERCEL ? '/tmp/sessions.db' : './sessions.db';
 
 const uploadsDir = path.join(__dirname, 'public', 'uploads');
 if (!fs.existsSync(uploadsDir)) {
@@ -41,7 +45,7 @@ const upload = multer({
   }
 });
 
-const db = new sqlite3.Database('./app.db', (err) => {
+const db = new sqlite3.Database(dbPath, (err) => {
   if (err) console.error('Database Error:', err);
   else console.log('✓ Connected to SQLite database');
 });
@@ -140,12 +144,12 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.use(session({
-  store: new SQLiteStore({ db: './sessions.db' }),
+  store: new SQLiteStore({ db: sessionDbPath }),
   secret: 'sweet-bakes-secret-key-2024',
   resave: false,
   saveUninitialized: false,
   cookie: {
-    secure: false,
+    secure: process.env.VERCEL ? true : false,
     httpOnly: true,
     maxAge: 24 * 60 * 60 * 1000 // 24 hours
   }
