@@ -1,0 +1,335 @@
+/* ============================================================================
+   Sweet Bakes - Contact Page Styles
+   ============================================================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Lora:wght@400;500&display=swap');
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  --cream: #FAF8F3;
+  --gold: #C9A961;
+  --dark-brown: #3E2723;
+  --light-brown: #8D6E63;
+  --rose: #E8D5C4;
+  --accent: #D7926E;
+}
+
+body {
+  font-family: 'Lora', serif;
+  background: var(--cream);
+  color: var(--dark-brown);
+}
+
+/* Navigation */
+nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.5rem 5%;
+  background: var(--cream);
+  border-bottom: 2px solid var(--gold);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  animation: slideDown 0.6s ease;
+}
+
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.logo {
+  font-family: 'Playfair Display', serif;
+  font-size: 2rem;
+  color: var(--dark-brown);
+  font-weight: bold;
+  letter-spacing: 2px;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.nav-center {
+  display: flex;
+  gap: 2rem;
+  list-style: none;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.nav-center a {
+  text-decoration: none;
+  color: var(--dark-brown);
+  font-size: 0.95rem;
+  font-weight: 500;
+  transition: color 0.3s;
+  border-bottom: 2px solid transparent;
+  padding-bottom: 4px;
+}
+
+.nav-center a:hover {
+  color: var(--accent);
+  border-bottom: 2px solid var(--accent);
+}
+
+.auth-buttons {
+  display: flex;
+  gap: 1rem;
+}
+
+.btn {
+  padding: 0.7rem 1.5rem;
+  border: 2px solid var(--gold);
+  background: var(--cream);
+  color: var(--dark-brown);
+  font-family: 'Lora', serif;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s;
+  text-decoration: none;
+  display: inline-block;
+  border-radius: 4px;
+}
+
+.btn:hover {
+  background: var(--gold);
+  color: var(--cream);
+  transform: translateY(-2px);
+}
+
+.btn-primary {
+  background: var(--gold);
+  color: var(--cream);
+  border-color: var(--gold);
+}
+
+.btn-primary:hover {
+  background: var(--dark-brown);
+  border-color: var(--dark-brown);
+}
+
+.btn-submit {
+  width: 100%;
+  padding: 1rem;
+  background: var(--gold);
+  color: var(--cream);
+  border: none;
+  border-radius: 4px;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.btn-submit:hover {
+  background: var(--dark-brown);
+  transform: translateY(-2px);
+}
+
+/* User Menu */
+.user-menu {
+  position: relative;
+}
+
+.user-menu > a {
+  text-decoration: none;
+  color: var(--dark-brown);
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.dropdown {
+  display: none;
+  position: absolute;
+  right: 0;
+  top: 100%;
+  background: white;
+  border: 1px solid var(--gold);
+  border-radius: 4px;
+  min-width: 150px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+}
+
+.dropdown a, .dropdown button {
+  display: block;
+  width: 100%;
+  padding: 0.8rem 1rem;
+  text-decoration: none;
+  color: var(--dark-brown);
+  border: none;
+  background: none;
+  cursor: pointer;
+  text-align: left;
+  font-family: 'Lora', serif;
+  transition: background 0.3s;
+}
+
+.dropdown a:hover, .dropdown button:hover {
+  background: var(--rose);
+}
+
+.dropdown.active {
+  display: block;
+}
+
+/* Container */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem 5%;
+}
+
+/* Page Title */
+.page-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 3rem;
+  text-align: center;
+  margin-bottom: 0.5rem;
+  color: var(--dark-brown);
+}
+
+.page-subtitle {
+  text-align: center;
+  color: var(--light-brown);
+  margin-bottom: 3rem;
+  font-size: 1rem;
+}
+
+/* Contact Section */
+.contact-section {
+  margin-bottom: 4rem;
+}
+
+.contact-info-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 2rem;
+  margin-bottom: 3rem;
+}
+
+.contact-card {
+  background: white;
+  border-radius: 8px;
+  padding: 2rem;
+  text-align: center;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s;
+}
+
+.contact-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+.contact-icon {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+}
+
+.contact-card h3 {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.4rem;
+  margin-bottom: 0.5rem;
+  color: var(--dark-brown);
+}
+
+.contact-card p {
+  font-size: 1.1rem;
+  color: var(--gold);
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+.contact-card a {
+  color: var(--gold);
+  text-decoration: none;
+  transition: color 0.3s;
+  word-break: break-all;
+  display: inline-block;
+}
+
+.contact-card a:hover {
+  color: var(--accent);
+}
+
+.contact-card small {
+  color: var(--light-brown);
+  font-size: 0.9rem;
+}
+
+/* Contact Message */
+.contact-message {
+  max-width: 700px;
+  margin: 3rem auto;
+  background: white;
+  padding: 2rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+}
+
+.contact-message h2 {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.8rem;
+  margin-bottom: 1rem;
+  color: var(--dark-brown);
+}
+
+.contact-message p {
+  font-size: 1rem;
+  line-height: 1.6;
+  color: var(--light-brown);
+}
+
+.contact-message a {
+  color: var(--gold);
+  text-decoration: none;
+  font-weight: 600;
+  transition: color 0.3s;
+}
+
+.contact-message a:hover {
+  color: var(--accent);
+}
+
+/* Footer */
+footer {
+  background: var(--dark-brown);
+  color: var(--cream);
+  text-align: center;
+  padding: 2rem;
+  margin-top: 3rem;
+  border-top: 3px solid var(--gold);
+}
+
+footer p {
+  margin: 0.5rem 0;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .page-title {
+    font-size: 2rem;
+  }
+
+  .section-title {
+    font-size: 1.8rem;
+  }
+
+  .form-row {
+    grid-template-columns: 1fr;
+  }
+
+  .contact-info-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .custom-cake-container {
+    padding: 1.5rem;
+  }
+}

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- DTD for Sweet Bakes Products -->
+<!DOCTYPE products [
+  <!ELEMENT products (product*)>
+  <!ELEMENT product (id, n, description, price, stock)>
+  <!ELEMENT id (#PCDATA)>
+  <!ELEMENT n (#PCDATA)>
+  <!ELEMENT description (#PCDATA)>
+  <!ELEMENT price (#PCDATA)>
+  <!ELEMENT stock (#PCDATA)>
+]>
+
+<!-- DTD for Orders -->
+<!DOCTYPE orders [
+  <!ELEMENT orders (order*)>
+  <!ELEMENT order (id, username, product_name, quantity, total_price, status, created_at)>
+  <!ELEMENT id (#PCDATA)>
+  <!ELEMENT username (#PCDATA)>
+  <!ELEMENT product_name (#PCDATA)>
+  <!ELEMENT quantity (#PCDATA)>
+  <!ELEMENT total_price (#PCDATA)>
+  <!ELEMENT status (#PCDATA)>
+  <!ELEMENT created_at (#PCDATA)>
+]>

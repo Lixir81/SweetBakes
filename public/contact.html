@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contact - Sweet Bakes</title>
+  <link rel="stylesheet" href="styles/contact.css">
+</head>
+<body>
+  <nav>
+    <div class="logo"><img src="/logo.png" alt="Sweet Bakes Logo" style="height: 50px; width: auto;"> Sweet Bakes</div>
+    <ul class="nav-center">
+      <li><a href="/">Products</a></li>
+      <li><a href="/contact">Contact</a></li>
+      <li><a href="/custom-cake">Custom Cake</a></li>
+    </ul>
+    <div class="auth-buttons" id="authButtons">
+      <a href="/login" class="btn">Login</a>
+      <a href="/register" class="btn btn-primary">Register</a>
+    </div>
+    <div id="userMenu" style="display: none;">
+      <div class="user-menu" id="userMenuBtn">
+        <a id="username">Profile <span style="font-size: 0.8rem; margin-left: 0.3rem;">▼</span></a>
+        <div class="dropdown" id="dropdownMenu">
+          <a href="/dashboard">Dashboard</a>
+          <button onclick="logout()">Logout</button>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container">
+    <!-- Contact Section -->
+    <section class="contact-section">
+      <h1 class="page-title">Contact Us</h1>
+      <p class="page-subtitle">Get in touch with Sweet Bakes by Dani</p>
+
+      <div class="contact-info-grid">
+        <div class="contact-card">
+          <div class="contact-icon">📞</div>
+          <h3>Phone Number</h3>
+          <p><a href="tel:09453256841">09453256841</a></p>
+          <small>Available for calls and SMS</small>
+        </div>
+
+        <div class="contact-card">
+          <div class="contact-icon">✉️</div>
+          <h3>Email</h3>
+          <p><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="224f4a4a5b414346434b4c4b474e4e4762454f434b4e0c414d4f">[email&#160;protected]</a></p>
+          <small>We'll respond within 24 hours</small>
+        </div>
+
+        <div class="contact-card">
+          <div class="contact-icon">📍</div>
+          <h3>Location</h3>
+          <p>Meycauayan, Bulacan</p>
+          <small>Philippines</small>
+        </div>
+
+        <div class="contact-card">
+          <div class="contact-icon">⏰</div>
+          <h3>Hours</h3>
+          <p>Monday - Saturday</p>
+          <small>9:00 AM - 6:00 PM</small>
+        </div>
+      </div>
+
+      <div class="contact-message">
+        <h2>How to Reach Us</h2>
+        <p>Have questions about our products or services? We'd love to hear from you! Feel free to contact us through any of the methods above. For custom cake orders, please visit our <a href="/custom-cake">Custom Cake Request</a> page where you can provide detailed specifications for your special occasion.</p>
+      </div>
+    </section>
+  </div>
+
+  <footer>
+    <p>&copy; 2024 Sweet Bakes by Dani. All rights reserved.</p>
+    <p>Crafted with love 💕</p>
+  </footer>
+
+  <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+    let currentUser = null;
+
+    // Load user if logged in
+    async function loadUser() {
+      try {
+        const res = await fetch('/api/user');
+        if (res.ok) {
+          currentUser = await res.json();
+          updateNavigation();
+        }
+      } catch (error) {
+        console.error('Error loading user:', error);
+      }
+    }
+
+    function updateNavigation() {
+      const authButtons = document.getElementById('authButtons');
+      const userMenu = document.getElementById('userMenu');
+      
+      if (currentUser) {
+        authButtons.style.display = 'none';
+        userMenu.style.display = 'block';
+        document.getElementById('username').textContent = currentUser.username;
+      } else {
+        authButtons.style.display = 'flex';
+        userMenu.style.display = 'none';
+      }
+    }
+
+    async function logout() {
+      const res = await fetch('/api/logout', { method: 'POST' });
+      if (res.ok) {
+        currentUser = null;
+        updateNavigation();
+        window.location.href = '/';
+      }
+    }
+
+    // Initialize
+    loadUser();
+
+    if (document.getElementById('userMenuBtn')) {
+      document.getElementById('userMenuBtn').addEventListener('click', function(e) {
+        const dropdown = document.getElementById('dropdownMenu');
+        dropdown.classList.toggle('active');
+        e.stopPropagation();
+      });
+
+      document.addEventListener('click', function(e) {
+        const userMenu = document.getElementById('userMenuBtn');
+        const dropdown = document.getElementById('dropdownMenu');
+        if (userMenu && !userMenu.contains(e.target)) {
+          dropdown.classList.remove('active');
+        }
+      });
+
+      document.getElementById('dropdo

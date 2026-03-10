@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Custom Cake Request - Sweet Bakes</title>
+  <link rel="stylesheet" href="styles/custom-cake.css">
+</head>
+<body>
+  <nav>
+    <div class="logo"><img src="/logo.png" alt="Sweet Bakes Logo" style="height: 50px; width: auto;"> Sweet Bakes</div>
+    <ul class="nav-center">
+      <li><a href="/">Products</a></li>
+      <li><a href="/contact">Contact</a></li>
+      <li><a href="/custom-cake">Custom Cake</a></li>
+    </ul>
+    <div class="auth-buttons" id="authButtons">
+      <a href="/login" class="btn">Login</a>
+      <a href="/register" class="btn btn-primary">Register</a>
+    </div>
+    <div id="userMenu" style="display: none;">
+      <div class="user-menu" id="userMenuBtn">
+        <a id="username">Profile <span style="font-size: 0.8rem; margin-left: 0.3rem;">▼</span></a>
+        <div class="dropdown" id="dropdownMenu">
+          <a href="/dashboard">Dashboard</a>
+          <button onclick="logout()">Logout</button>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container">
+    <!-- Custom Cake Request Section -->
+    <section class="custom-cake-section">
+      <h1 class="page-title">Request a Custom Cake</h1>
+      <p class="page-subtitle">Create your dream cake for your special event!</p>
+
+      <div class="custom-cake-container">
+        <div class="success-message" id="successMsg" style="display: none;">
+          ✓ Your custom cake request has been submitted successfully! We'll contact you soon to confirm the details.
+        </div>
+        <div class="error-message" id="errorMsg" style="display: none;">
+          × There was an error submitting your request. Please try again.
+        </div>
+
+        <div class="login-prompt" id="loginPrompt" style="display: none;">
+          <p>You need to be logged in to submit a custom cake request.</p>
+          <div class="login-prompt-buttons">
+            <a href="/login" class="btn">Login</a>
+            <a href="/register" class="btn btn-primary">Register</a>
+          </div>
+        </div>
+
+        <form id="customCakeForm" enctype="multipart/form-data">
+          <div class="form-row">
+            <div class="form-group">
+              <label for="customerName">Your Name *</label>
+              <input type="text" id="customerName" required placeholder="Full name">
+            </div>
+
+            <div class="form-group">
+              <label for="customerEmail">Email *</label>
+              <input type="email" id="customerEmail" required placeholder="your@email.com">
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="customerPhone">Phone Number *</label>
+              <input type="tel" id="customerPhone" required placeholder="09XXXXXXXXX">
+            </div>
+
+            <div class="form-group">
+              <label for="eventDate">Event Date *</label>
+              <input type="date" id="eventDate" required>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="eventType">Event Type *</label>
+            <select id="eventType" required>
+              <option value="">Select an event type</option>
+              <option value="birthday">Birthday</option>
+              <option value="wedding">Wedding</option>
+              <option value="anniversary">Anniversary</option>
+              <option value="graduation">Graduation</option>
+              <option value="corporate">Corporate Event</option>
+              <option value="other">Other</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="cakeFlavor">Cake Flavor Preference *</label>
+            <select id="cakeFlavor" required>
+              <option value="">Select a flavor</option>
+              <option value="vanilla">Vanilla</option>
+              <option value="chocolate">Chocolate</option>
+              <option value="strawberry">Strawberry</option>
+              <option value="red-velvet">Red Velvet</option>
+              <option value="carrot">Carrot Cake</option>
+              <option value="cheesecake">Cheesecake</option>
+              <option value="lemon">Lemon</option>
+              <option value="matcha">Matcha</option>
+              <option value="custom">Custom Flavor (describe below)</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="designDescription">Design Description *</label>
+            <textarea id="designDescription" required placeholder="Describe your cake design, colors, decorations, and any special details you want..." style="min-height: 120px;"></textarea>
+          </div>
+
+          <div class="form-group">
+            <label for="servings">Number of Servings *</label>
+            <input type="number" id="servings" required placeholder="How many people?" min="1">
+          </div>
+
+          <div class="form-group">
+            <label for="referenceImage">Reference Image</label>
+            <input type="file" id="referenceImage" accept="image/*">
+            <small style="color: var(--light-brown); display: block; margin-top: 0.5rem;">Upload a photo of a cake design you like (JPG, PNG, GIF - Max 5MB)</small>
+            <div id="imagePreview" style="margin-top: 1rem; display: none;">
+              <p style="font-size: 0.9rem; font-weight: 600; margin-bottom: 0.5rem;">Preview:</p>
+              <img id="previewImg" src="" style="max-width: 100%; max-height: 250px; border-radius: 8px; object-fit: cover;">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="additionalNotes">Additional Notes</label>
+            <textarea id="additionalNotes" placeholder="Any allergies, special requests, or additional information..." style="min-height: 80px;"></textarea>
+          </div>
+
+          <button type="submit" class="btn btn-submit">Submit Custom Cake Request</button>
+        </form>
+      </div>
+    </section>
+  </div>
+
+  <footer>
+    <p>&copy; 2024 Sweet Bakes by Dani. All rights reserved.</p>
+    <p>Crafted with love 💕</p>
+  </footer>
+
+  <script>
+    let currentUser = null;
+
+    // Load user if logged in
+    async function loadUser() {
+      try {
+        const res = await fetch('/api/user');
+        if (res.ok) {
+          currentUser = await res.json();
+          updateNavigation();
+          document.getElementById('customCakeForm').style.display = 'block';
+          document.getElementById('loginPrompt').style.display = 'none';
+          // Pre-fill form with user info
+          document.getElementById('customerEmail').value = currentUser.email;
+        } else {
+          document.getElementById('customCakeForm').style.display = 'none';
+          document.getElementById('loginPrompt').style.display = 'block';
+        }
+      } catch (error) {
+        console.error('Error loading user:', error);
+        document.getElementById('customCakeForm').style.display = 'none';
+        document.getElementById('loginPrompt').style.display = 'block';
+      }
+    }
+
+    function updateNavigation() {
+      const authButtons = document.getElementById('authButtons');
+      const userMenu = document.getElementById('userMenu');
+      
+      if (currentUser) {
+        authButtons.style.display = 'none';
+        userMenu.style.display = 'block';
+        document.getElementById('username').textContent = currentUser.username;
+      } else {
+        authButtons.style.display = 'flex';
+        userMenu.style.display = 'none';
+      }
+    }
+
+    async function logout() {
+      const res = await fetch('/api/logout', { method: 'POST' });
+      if (res.ok) {
+        currentUser = null;
+        updateNavigation();
+        window.location.href = '/';
+      }
+    }
+
+    // Image preview
+    document.getElementById('referenceImage').addEventListener('change', function(e) {
+      const file = e.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function(event) {
+          document.getElementById('previewImg').src = event.target.result;
+          document.getElementById('imagePreview').style.display = 'block';
+        };
+        reader.readAsDataURL(file);
+      }
+    });
+
+    // Form submission
+    document.getElementById('customCakeForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      if (!currentUser) {
+        alert('Please login to submit a custom cake request');
+        window.location.href = '/login';
+        return;
+      }
+
+      const formData = new FormData();
+      formData.append('customer_name', document.getElementById('customerName').value);
+      formData.append('customer_email', document.getElementById('customerEmail').value);
+      formData.append('customer_phone', document.getElementById('customerPhone').value);
+      formData.append('event_date', document.getElementById('eventDate').value);
+      formData.append('event_type', document.getElementById('eventType').value);
+      formData.append('cake_flavor', document.getElementById('cakeFlavor').value);
+      formData.append('design_description', document.getElementById('designDescription').value);
+      formData.append('servings', document.getElementById('servings').value);
+      formData.append('additional_notes', document.getElementById('additionalNotes').value);
+      formData.append('user_id', currentUser.id);
+
+      const imageFile = document.getElementById('referenceImage').files[0];
+      if (imageFile) {
+        formData.append('reference_image', imageFile);
+      }
+
+      try {
+        const res = await fetch('/api/custom-cake-request', {
+          method: 'POST',
+          body: formData
+        });
+
+        const data = await res.json();
+
+        if (res.ok) {
+          document.getElementById('successMsg').style.display = 'block';
+          document.getElementById('customCakeForm').reset();
+          document.getElementById('imagePreview').style.display = 'none';
+          
+          setTimeout(() => {
+            document.getElementById('successMsg').style.display = 'none';
+          }, 5000);
+        } else {
+          document.getElementById('errorMsg').textContent = '× ' + (data.error || 'Failed to submit request');
+          document.getElementById('errorMsg').style.display = 'block';
+          
+          setTimeout(() => {
+            document.getElementById('errorMsg').style.display = 'none';
+          }, 5000);
+        }
+      } catch (error) {
+        document.getElementById('errorMsg').textContent = '× Error submitting request. Please try again.';
+        document.getElementById('errorMsg').style.display = 'block';
+        console.error('Error:', error);
+      }
+    });
+
+    // Initialize
+    loadUser();
+
+    if (document.getElementById('userMenuBtn')) {
+      document.getElementById('userMenuBtn').addEventListener('click', function(e) {
+        const dropdown = document.getElementById('dropdownMenu');
+        dropdown.classList.toggle('active');
+        e.stopPropagation();
+      });
+
+      document.addEventListener('click', function(e) {
+        const userMenu = document.getElementById('userMenuBtn');
+        const dropdown = document.getElementById('dropdownMenu');
+        if (userMenu && !userMenu.contains(e.target)) {
+          dropdown.classList.remove('active');
+        }
+      });
+
+      document.getElementById('dropdownMenu').addEventListener('click', function(e) {
+        if (e.target.tagName === 'A') {
+          setTimeout(() => {
+            this.classList.remove('active');
+          }, 100);
+        }
+      });
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,331 @@
+/* ============================================================================
+   Sweet Bakes - Custom Cake Request Page Styles
+   ============================================================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Lora:wght@400;500&display=swap');
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  --cream: #FAF8F3;
+  --gold: #C9A961;
+  --dark-brown: #3E2723;
+  --light-brown: #8D6E63;
+  --rose: #E8D5C4;
+  --accent: #D7926E;
+}
+
+body {
+  font-family: 'Lora', serif;
+  background: var(--cream);
+  color: var(--dark-brown);
+}
+
+/* Navigation */
+nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.5rem 5%;
+  background: var(--cream);
+  border-bottom: 2px solid var(--gold);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  animation: slideDown 0.6s ease;
+}
+
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.logo {
+  font-family: 'Playfair Display', serif;
+  font-size: 2rem;
+  color: var(--dark-brown);
+  font-weight: bold;
+  letter-spacing: 2px;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.nav-center {
+  display: flex;
+  gap: 2rem;
+  list-style: none;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.nav-center a {
+  text-decoration: none;
+  color: var(--dark-brown);
+  font-size: 0.95rem;
+  font-weight: 500;
+  transition: color 0.3s;
+  border-bottom: 2px solid transparent;
+  padding-bottom: 4px;
+}
+
+.nav-center a:hover {
+  color: var(--accent);
+  border-bottom: 2px solid var(--accent);
+}
+
+.auth-buttons {
+  display: flex;
+  gap: 1rem;
+}
+
+.btn {
+  padding: 0.7rem 1.5rem;
+  border: 2px solid var(--gold);
+  background: var(--cream);
+  color: var(--dark-brown);
+  font-family: 'Lora', serif;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s;
+  text-decoration: none;
+  display: inline-block;
+  border-radius: 4px;
+}
+
+.btn:hover {
+  background: var(--gold);
+  color: var(--cream);
+  transform: translateY(-2px);
+}
+
+.btn-primary {
+  background: var(--gold);
+  color: var(--cream);
+  border-color: var(--gold);
+}
+
+.btn-primary:hover {
+  background: var(--dark-brown);
+  border-color: var(--dark-brown);
+}
+
+.btn-submit {
+  width: 100%;
+  padding: 1rem;
+  background: var(--gold);
+  color: var(--cream);
+  border: none;
+  border-radius: 4px;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.btn-submit:hover {
+  background: var(--dark-brown);
+  transform: translateY(-2px);
+}
+
+/* User Menu */
+.user-menu {
+  position: relative;
+}
+
+.user-menu > a {
+  text-decoration: none;
+  color: var(--dark-brown);
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.dropdown {
+  display: none;
+  position: absolute;
+  right: 0;
+  top: 100%;
+  background: white;
+  border: 1px solid var(--gold);
+  border-radius: 4px;
+  min-width: 150px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+}
+
+.dropdown a, .dropdown button {
+  display: block;
+  width: 100%;
+  padding: 0.8rem 1rem;
+  text-decoration: none;
+  color: var(--dark-brown);
+  border: none;
+  background: none;
+  cursor: pointer;
+  text-align: left;
+  font-family: 'Lora', serif;
+  transition: background 0.3s;
+}
+
+.dropdown a:hover, .dropdown button:hover {
+  background: var(--rose);
+}
+
+.dropdown.active {
+  display: block;
+}
+
+/* Container */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem 5%;
+}
+
+/* Page Title */
+.page-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 3rem;
+  text-align: center;
+  margin-bottom: 0.5rem;
+  color: var(--dark-brown);
+}
+
+.page-subtitle {
+  text-align: center;
+  color: var(--light-brown);
+  margin-bottom: 2rem;
+  font-size: 1rem;
+}
+
+/* Custom Cake Section */
+.custom-cake-section {
+  background: linear-gradient(135deg, var(--rose) 0%, var(--cream) 100%);
+  border-radius: 12px;
+  padding: 3rem;
+}
+
+.custom-cake-container {
+  max-width: 600px;
+  margin: 0 auto;
+  background: white;
+  padding: 2rem;
+  border-radius: 8px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+.success-message {
+  background: #D4EDDA;
+  color: #155724;
+  padding: 1rem;
+  border-radius: 4px;
+  margin-bottom: 1.5rem;
+  border-left: 4px solid #155724;
+}
+
+.error-message {
+  background: #F8D7DA;
+  color: #721C24;
+  padding: 1rem;
+  border-radius: 4px;
+  margin-bottom: 1.5rem;
+  border-left: 4px solid #721C24;
+}
+
+.login-prompt {
+  text-align: center;
+  padding: 2rem;
+  background: var(--rose);
+  border-radius: 8px;
+}
+
+.login-prompt p {
+  margin-bottom: 1.5rem;
+  font-size: 1.1rem;
+  color: var(--dark-brown);
+}
+
+.login-prompt-buttons {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.login-prompt .btn {
+  margin: 0;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+}
+
+.form-group {
+  margin-bottom: 1.5rem;
+}
+
+.form-group:last-child {
+  margin-bottom: 0;
+}
+
+label {
+  display: block;
+  margin-bottom: 0.5rem;
+  color: var(--dark-brown);
+  font-weight: 600;
+}
+
+input, textarea, select {
+  width: 100%;
+  padding: 0.8rem;
+  border: 2px solid var(--gold);
+  border-radius: 4px;
+  font-family: 'Lora', serif;
+  font-size: 0.95rem;
+  background: var(--cream);
+  color: var(--dark-brown);
+}
+
+input:focus, textarea:focus, select:focus {
+  outline: none;
+  border-color: var(--accent);
+  background: white;
+}
+
+textarea {
+  resize: vertical;
+}
+
+/* Footer */
+footer {
+  background: var(--dark-brown);
+  color: var(--cream);
+  text-align: center;
+  padding: 2rem;
+  margin-top: 3rem;
+  border-top: 3px solid var(--gold);
+}
+
+footer p {
+  margin: 0.5rem 0;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .page-title {
+    font-size: 2rem;
+  }
+
+  .form-row {
+    grid-template-columns: 1fr;
+  }
+
+  .custom-cake-container {
+    padding: 1.5rem;
+  }
+}
