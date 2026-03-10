@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Register - Sweet Bakes</title>
+  <link rel="stylesheet" href="styles/register.css">
+</head>
+<body>
+  <div class="container">
+    <div class="logo">🍰</div>
+    <h1 style="text-align: center; font-family: 'Playfair Display', serif; margin-bottom: 0.5rem; font-size: 2rem;">Sweet Bakes</h1>
+    <p class="subtitle">Create your account</p>
+
+    <div class="error" id="errorMsg"></div>
+
+    <form id="registerForm">
+      <div class="form-group">
+        <label for="username">Username</label>
+        <input type="text" id="username" name="username" required placeholder="Choose a username">
+      </div>
+
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input type="email" id="email" name="email" required placeholder="your@email.com">
+      </div>
+
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input type="password" id="password" name="password" required placeholder="At least 6 characters">
+      </div>
+
+      <div class="form-group">
+        <label for="confirmPassword">Confirm Password</label>
+        <input type="password" id="confirmPassword" name="confirmPassword" required placeholder="Confirm your password">
+      </div>
+
+      <button type="submit" class="btn">Create Account</button>
+    </form>
+
+    <div class="divider">Already have an account?</div>
+
+    <div class="link-section">
+      <a href="/login">Login here</a>
+    </div>
+
+    <div class="back-home">
+      <a href="/">← Back to Home</a>
+    </div>
+  </div>
+
+  <script>
+    const form = document.getElementById('registerForm');
+    const errorMsg = document.getElementById('errorMsg');
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      errorMsg.classList.remove('show');
+
+      const username = document.getElementById('username').value;
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+      const confirmPassword = document.getElementById('confirmPassword').value;
+
+      if (password !== confirmPassword) {
+        showError('Passwords do not match');
+        return;
+      }
+
+      if (password.length < 6) {
+        showError('Password must be at least 6 characters');
+        return;
+      }
+
+      try {
+        const res = await fetch('/api/register', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ username, email, password, confirmPassword })
+        });
+
+        const data = await res.json();
+
+        if (res.ok) {
+          alert('Registration successful! Redirecting to dashboard...');
+          window.location.href = '/dashboard';
+        } else {
+          showError(data.error || 'Registration failed');
+        }
+      } catch (error) {
+        showError('An error occurred. Please try again.');
+        console.error('Error:', error);
+      }
+    });
+
+    function showError(message) {
+      errorMsg.textContent = message;
+      errorMsg.classList.add('show');
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sweet Bakes by Dani - Artisanal Pastries</title>
+  <link rel="stylesheet" href="styles/index.css">
+</head>
+<body>
+  <nav>
+    <div class="logo"><img src="/logo.png" alt="Sweet Bakes Logo" style="height: 50px; width: auto;"> Sweet Bakes</div>
+    <ul class="nav-center">
+      <li><a href="#products">Products</a></li>
+      <li><a href="/contact">Contact</a></li>
+      <li><a href="#" onclick="goToCustomCake(); return false;">Custom Cake</a></li>
+    </ul>
+    <div class="auth-buttons" id="authButtons">
+      <a href="/login" class="btn">Login</a>
+      <a href="/register" class="btn btn-primary">Register</a>
+    </div>
+    <div id="userMenu" style="display: none;">
+      <div class="user-menu" id="userMenuBtn">
+        <a id="username">Profile <span style="font-size: 0.8rem; margin-left: 0.3rem;">▼</span></a>
+        <div class="dropdown" id="dropdownMenu">
+          <a href="/dashboard">Dashboard</a>
+          <button onclick="logout()">Logout</button>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <section class="hero">
+    <h1>Sweet Bakes by Dani</h1>
+    <p>Artisanal French pastries, crafted with love and the finest ingredients</p>
+    <a href="#products" class="cta-button">Explore Our Collection</a>
+  </section>
+
+  <section id="products" class="products-section">
+    <h2 class="section-title">Our Specialties</h2>
+    <div class="products-grid" id="productsGrid"></div>
+  </section>
+
+  <footer>
+    <p>&copy; 2024 Sweet Bakes by Dani. All rights reserved.</p>
+    <p>Crafted with love 💕</p>
+    <div class="footer-links">
+      <a href="https://www.instagram.com/sweetbakesbydani_/" target="_blank">Instagram</a>
+      <a href="#contact">Contact</a>
+      <a href="#privacy">Privacy</a>
+    </div>
+  </footer>
+
+  <script>
+    let currentUser = null;
+
+    // Load user if logged in
+    async function loadUser() {
+      try {
+        const res = await fetch('/api/user');
+        if (res.ok) {
+          currentUser = await res.json();
+          updateNavigation();
+        }
+      } catch (error) {
+        console.error('Error loading user:', error);
+      }
+    }
+
+    function updateNavigation() {
+      const authButtons = document.getElementById('authButtons');
+      const userMenu = document.getElementById('userMenu');
+      
+      if (currentUser) {
+        authButtons.style.display = 'none';
+        userMenu.style.display = 'block';
+        document.getElementById('username').textContent = currentUser.username;
+      } else {
+        authButtons.style.display = 'flex';
+        userMenu.style.display = 'none';
+      }
+    }
+
+    async function logout() {
+      const res = await fetch('/api/logout', { method: 'POST' });
+      if (res.ok) {
+        currentUser = null;
+        updateNavigation();
+        window.location.href = '/';
+      }
+    }
+
+    // Load products
+    async function loadProducts() {
+      try {
+        const res = await fetch('/api/products');
+        const products = await res.json();
+        const grid = document.getElementById('productsGrid');
+        
+        grid.innerHTML = products.map(product => `
+          <div class="product-card">
+            <div class="product-image" style="background: url('${product.image_url}') center/cover no-repeat;">
+              ${!product.image_url || product.image_url.includes('default') ? '🥐' : ''}
+            </div>
+            <div class="product-info">
+              <div class="product-name">${product.name}</div>
+              <div class="product-desc">${product.description}</div>
+              <div class="product-price">$${product.price.toFixed(2)}</div>
+              <div class="product-stock">Stock: ${product.stock}</div>
+              <button class="product-btn" onclick="addToCart(${product.id})" ${product.stock === 0 ? 'disabled' : ''}>
+                ${product.stock === 0 ? 'Out of Stock' : 'Order Now'}
+              </button>
+            </div>
+          </div>
+        `).join('');
+      } catch (error) {
+        console.error('Error loading products:', error);
+      }
+    }
+
+    function addToCart(productId) {
+      if (!currentUser) {
+        window.location.href = '/login';
+        return;
+      }
+      
+      const quantity = prompt('How many would you like?', '1');
+      if (quantity && quantity > 0) {
+        fetch('/api/orders', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ product_id: productId, quantity: parseInt(quantity) })
+        })
+        .then(res => res.json())
+        .then(data => {
+          if (data.id) {
+            alert('Order placed successfully!');
+            loadProducts();
+          } else {
+            alert(data.error || 'Failed to place order');
+          }
+        })
+        .catch(err => console.error('Error:', err));
+      }
+    }
+
+    // Initialize
+    loadUser();
+    loadProducts();
+
+    function goToCustomCake() {
+      fetch('/api/user')
+        .then(res => {
+          if (res.ok) {
+            window.location.href = '/custom-cake';
+          } else {
+            window.location.href = '/custom-cake';
+          }
+        })
+        .catch(() => {
+          window.location.href = '/custom-cake';
+        });
+    }
+
+    document.getElementById('userMenuBtn').addEventListener('click', function(e) {
+      const dropdown = document.getElementById('dropdownMenu');
+      dropdown.classList.toggle('active');
+      e.stopPropagation();
+    });
+
+    document.addEventListener('click', function(e) {
+      const userMenu = document.getElementById('userMenuBtn');
+      const dropdown = document.getElementById('dropdownMenu');
+      if (!userMenu.contains(e.target)) {
+        dropdown.classList.remove('active');
+      }
+    });
+
+    document.getElementById('dropdownMenu').addEventListener('click', function(e) {
+      if (e.target.tagName === 'A') {
+        setTimeout(() => {
+          this.classList.remove('active');
+        }, 100);
+      }
+    });
+  </script>
+</body>
+</html>

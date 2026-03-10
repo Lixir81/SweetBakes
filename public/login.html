@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login - Sweet Bakes</title>
+  <link rel="stylesheet" href="styles/login.css">
+</head>
+<body>
+  <div class="container">
+    <div class="logo">🍰</div>
+    <h1 style="text-align: center; font-family: 'Playfair Display', serif; margin-bottom: 0.5rem; font-size: 2rem;">Sweet Bakes</h1>
+    <p class="subtitle">Login to your account</p>
+
+    <div class="error" id="errorMsg"></div>
+
+    <form id="loginForm">
+      <div class="form-group">
+        <label for="username">Username</label>
+        <input type="text" id="username" name="username" required placeholder="Enter your username">
+      </div>
+
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input type="password" id="password" name="password" required placeholder="Enter your password">
+      </div>
+
+      <button type="submit" class="btn">Login</button>
+    </form>
+
+    <div class="divider">Don't have an account?</div>
+
+    <div class="link-section">
+      <a href="/register">Create a new account</a>
+    </div>
+
+    <div class="back-home">
+      <a href="/">← Back to Home</a>
+    </div>
+  </div>
+
+  <script>
+    const form = document.getElementById('loginForm');
+    const errorMsg = document.getElementById('errorMsg');
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      errorMsg.classList.remove('show');
+
+      const username = document.getElementById('username').value;
+      const password = document.getElementById('password').value;
+
+      try {
+        const res = await fetch('/api/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ username, password })
+        });
+
+        const data = await res.json();
+
+        if (res.ok) {
+          window.location.href = '/dashboard';
+        } else {
+          showError(data.error || 'Login failed');
+        }
+      } catch (error) {
+        showError('An error occurred. Please try again.');
+        console.error('Error:', error);
+      }
+    });
+
+    function showError(message) {
+      errorMsg.textContent = message;
+      errorMsg.classList.add('show');
+    }
+
+    console.log('Demo Admin Credentials: admin / admin123');
+  </script>
+</body>
+</html>

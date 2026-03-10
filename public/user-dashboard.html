@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Dashboard - Sweet Bakes</title>
+  <link rel="stylesheet" href="styles/user-dashboard.css">
+</head>
+<body>
+  <header>
+    <div class="logo">🍰 Sweet Bakes</div>
+    <div class="header-actions">
+      <div class="user-info">
+        Welcome, <span id="username"></span>
+      </div>
+      <a href="/" class="btn btn-secondary">Shop</a>
+      <button onclick="logout()" class="btn">Logout</button>
+    </div>
+  </header>
+
+  <div class="container">
+    <h1 class="page-title">My Dashboard</h1>
+    <p class="page-subtitle">Manage your orders and track your purchases</p>
+
+    <div class="stats">
+      <div class="stat-card">
+        <div class="stat-value" id="totalOrders">0</div>
+        <div class="stat-label">Total Orders</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value" id="totalSpent">$0</div>
+        <div class="stat-label">Total Spent</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value" id="pendingOrders">0</div>
+        <div class="stat-label">Pending Orders</div>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2 class="section-title">Your Orders</h2>
+      <div id="ordersContainer"></div>
+    </div>
+  </div>
+
+  <script>
+    let currentUser = null;
+
+    async function loadUser() {
+      try {
+        const res = await fetch('/api/user');
+        if (res.ok) {
+          currentUser = await res.json();
+          document.getElementById('username').textContent = currentUser.username;
+        } else {
+          window.location.href = '/login';
+        }
+      } catch (error) {
+        console.error('Error loading user:', error);
+        window.location.href = '/login';
+      }
+    }
+
+    async function loadOrders() {
+      try {
+        const res = await fetch('/api/orders');
+        if (!res.ok) throw new Error('Failed to load orders');
+        
+        const orders = await res.json();
+        const container = document.getElementById('ordersContainer');
+
+        if (orders.length === 0) {
+          container.innerHTML = `
+            <div class="empty-state">
+              <div class="empty-state-icon">📭</div>
+              <h3>No Orders Yet</h3>
+              <p>Start shopping to place your first order</p>
+              <a href="/" class="btn" style="margin-top: 1rem;">Back to Shop</a>
+            </div>
+          `;
+          updateStats(orders);
+          return;
+        }
+
+        container.innerHTML = `
+          <div class="orders-grid">
+            ${orders.map(order => `
+              <div class="order-card">
+                <div class="order-header">
+                  <div class="order-id">Order #${order.id}</div>
+                  <span class="order-status status-${order.status.toLowerCase()}">${order.status}</span>
+                </div>
+                <div class="order-details">
+                  <p><span class="product-name">${order.product_name}</span></p>
+                  <p>Quantity: ${order.quantity}</p>
+                  <p class="order-date">Ordered: ${new Date(order.created_at).toLocaleDateString()}</p>
+                </div>
+                <div class="order-price">$${order.total_price.toFixed(2)}</div>
+              </div>
+            `).join('')}
+          </div>
+        `;
+
+        updateStats(orders);
+      } catch (error) {
+        console.error('Error loading orders:', error);
+        document.getElementById('ordersContainer').innerHTML = '<p style="color: red;">Failed to load orders</p>';
+      }
+    }
+
+    function updateStats(orders) {
+      const totalOrders = orders.length;
+      const totalSpent = orders.reduce((sum, order) => sum + order.total_price, 0);
+      const pendingOrders = orders.filter(o => o.status === 'pending').length;
+
+      document.getElementById('totalOrders').textContent = totalOrders;
+      document.getElementById('totalSpent').textContent = '$' + totalSpent.toFixed(2);
+      document.getElementById('pendingOrders').textContent = pendingOrders;
+    }
+
+    async function logout() {
+      const res = await fetch('/api/logout', { method: 'POST' });
+      if (res.ok) {
+        window.location.href = '/';
+      }
+    }
+
+    loadUser();
+    loadOrders();
+
+    // Refresh orders every 30 seconds
+    setInterval(loadOrders, 30000);
+  </script>
+</body>
+</html>
